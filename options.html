@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClippyTwo — Options</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #111110;
+      --surface: #1c1b1a;
+      --border:  #2c2b29;
+      --accent:  #f97316;
+      --text:    #f5f4f2;
+      --muted:   #79776f;
+      --red:     #ef4444;
+      --r:       6px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 14px;
+      padding: 40px 48px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .logo {
+      width: 26px; height: 26px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: grid; place-items: center;
+      font-size: 14px;
+    }
+    h1 { font-size: 18px; font-weight: 600; }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 0;
+      font-size: 13px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      text-align: left;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 0 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    td { padding: 11px 12px; vertical-align: middle; }
+
+    .td-domain {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px; color: var(--accent);
+    }
+
+    .td-delim {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px; color: var(--text);
+    }
+    .delim-none { color: var(--muted); font-style: italic; }
+
+    .del-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--muted);
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .del-btn:hover { border-color: var(--red); color: var(--red); }
+
+    .actions { margin-top: 20px; }
+    .clear-all {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--muted);
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .clear-all:hover { border-color: var(--red); color: var(--red); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✂</div>
+  <h1>ClippyTwo</h1>
+</header>
+<p class="sub">
+  Select page elements and copy as plain text or live hyperlinks.<br>
+  Delimiter preference is saved per domain. Change it anytime from the popup before starting selection.
+</p>
+
+<h2>Saved Delimiters</h2>
+<div id="content"><p class="empty">Loading…</p></div>
+
+<script>
+const PRESET_LABELS = { "": "none", " / ": "/", ", ": ",", " · ": "·" };
+
+function delimLabel(value) {
+  if (value in PRESET_LABELS) {
+    return value === ""
+      ? `<span class="delim-none">none</span>`
+      : `<span>${PRESET_LABELS[value]}</span>`;
+  }
+  return `<span>${value || '<span class="delim-none">none</span>'}</span>`;
+}
+
+function load() {
+  chrome.storage.local.get("delimiters", (data) => render(data.delimiters || {}));
+}
+
+function render(delimiters) {
+  const el = document.getElementById("content");
+  const entries = Object.entries(delimiters);
+
+  if (!entries.length) {
+    el.innerHTML = `<p class="empty">No delimiter preferences saved yet.<br>They're set per domain from the popup.</p>`;
+    return;
+  }
+
+  const rows = entries.map(([domain, value]) => `
+    <tr>
+      <td class="td-domain">${domain}</td>
+      <td class="td-delim">${delimLabel(value)}</td>
+      <td><button class="del-btn" data-domain="${domain}">Remove</button></td>
+    </tr>
+  `).join("");
+
+  el.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Domain</th>
+        <th>Delimiter</th>
+        <th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="actions">
+      <button class="clear-all" id="clearAll">Clear all</button>
+    </div>
+  `;
+
+  el.querySelectorAll(".del-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      chrome.storage.local.get("delimiters", (data) => {
+        const d = data.delimiters || {};
+        delete d[btn.dataset.domain];
+        chrome.storage.local.set({ delimiters: d }, load);
+      });
+    });
+  });
+
+  document.getElementById("clearAll").addEventListener("click", () => {
+    if (confirm("Clear all saved delimiter preferences?")) {
+      chrome.storage.local.set({ delimiters: {} }, load);
+    }
+  });
+}
+
+load();
+</script>
+</body>
+</html>

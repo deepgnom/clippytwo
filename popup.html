@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClippyTwo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #111110;
+      --surface: #1c1b1a;
+      --border:  #2c2b29;
+      --accent:  #f97316;
+      --blue:    #3b82f6;
+      --text:    #f5f4f2;
+      --muted:   #79776f;
+      --green:   #22c55e;
+      --r:       6px;
+    }
+
+    body {
+      width: 270px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    /* header */
+    .hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 14px 11px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      width: 22px; height: 22px;
+      background: var(--accent);
+      border-radius: 5px;
+      display: grid; place-items: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .hdr h1 { font-size: 13px; font-weight: 600; letter-spacing: 0.01em; }
+    .domain {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      max-width: 100px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* sections */
+    .sec {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sec:last-of-type { border-bottom: none; }
+
+    .lbl {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--muted); margin-bottom: 8px;
+    }
+
+    /* buttons */
+    .btn {
+      width: 100%; padding: 8px 11px;
+      border-radius: var(--r); border: none;
+      cursor: pointer;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 7px;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+    .btn + .btn { margin-top: 6px; }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #ea6c0a; }
+    .btn-primary.active { background: var(--green); }
+    .btn-primary.active:hover { background: #18a34a; }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .btn-ghost:disabled { opacity: 0.38; cursor: default; }
+
+    /* pattern card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .card-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+    .card-row:last-child { margin-bottom: 0; }
+    .card-key { color: var(--muted); }
+    .card-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--accent);
+    }
+    .card-empty { color: var(--muted); font-style: italic; font-size: 12px; }
+
+    /* delimiter */
+    .delim-row {
+      display: flex; gap: 5px; align-items: center; margin-bottom: 7px;
+    }
+    .delim-preset {
+      flex: 1; padding: 5px 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+      text-align: center;
+    }
+    .delim-preset:hover { border-color: var(--accent); color: var(--accent); }
+    .delim-preset.selected {
+      border-color: var(--accent);
+      background: rgba(249,115,22,0.12);
+      color: var(--accent);
+    }
+    .delim-custom-row {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .delim-input {
+      flex: 1; padding: 5px 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.12s;
+    }
+    .delim-input:focus { border-color: var(--accent); }
+    .delim-input::placeholder { color: var(--muted); }
+    .delim-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .hint {
+      margin-top: 7px; font-size: 11px;
+      color: var(--muted); line-height: 1.55;
+    }
+    kbd {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; padding: 0 4px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    }
+
+    .legend { display: flex; gap: 10px; margin-top: 7px; }
+    .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot--orange { background: var(--accent); }
+    .dot--blue   { background: var(--blue); }
+
+    /* footer link */
+    .footer {
+      text-align: center; padding: 9px;
+      border-top: 1px solid var(--border);
+    }
+    .footer a {
+      color: var(--muted); font-size: 11px;
+      text-decoration: none; transition: color 0.12s;
+    }
+    .footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">✂</div>
+  <h1>ClippyTwo</h1>
+  <span class="domain" id="domain">—</span>
+</div>
+
+<div class="sec">
+  <div class="lbl">Selection</div>
+  <button class="btn btn-primary" id="toggleBtn">
+    <span id="toggleIcon">⊹</span>
+    <span id="toggleLabel">Start Selection Mode</span>
+  </button>
+  <div class="legend">
+    <div class="leg"><div class="dot dot--orange"></div> Plain text</div>
+    <div class="leg"><div class="dot dot--blue"></div> Contains link</div>
+  </div>
+  <div class="hint">
+    Click to select · Shift+Click captures inner link<br>
+    Press <kbd>C</kbd> to copy · <kbd>Esc</kbd> to cancel
+  </div>
+</div>
+
+<div class="sec">
+  <div class="lbl">Delimiter between elements</div>
+  <div class="delim-row">
+    <button class="delim-preset" data-value="" title="No delimiter">none</button>
+    <button class="delim-preset" data-value=" / " title="Forward slash"> / </button>
+    <button class="delim-preset" data-value=", " title="Comma">,</button>
+    <button class="delim-preset" data-value=" · " title="Middle dot"> · </button>
+  </div>
+  <div class="delim-custom-row">
+    <input class="delim-input" id="delimCustom" type="text" maxlength="10" placeholder="custom…" spellcheck="false">
+  </div>
+  <div class="delim-hint">Saved per domain. Used between each copied element.</div>
+</div>
+
+<div class="footer">
+  <a href="options.html" target="_blank">Options →</a>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

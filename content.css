@@ -1,0 +1,117 @@
+/* PageClipper v2 */
+
+/* ── Hover states ─────────────────────────────────────────── */
+
+.pc-hover {
+  outline: 2px dashed #f97316 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(249, 115, 22, 0.07) !important;
+  cursor: crosshair !important;
+}
+
+/* Blue dashed = element contains a link; Shift+Click available */
+.pc-hover--link {
+  outline: 2px dashed #3b82f6 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(59, 130, 246, 0.07) !important;
+  cursor: crosshair !important;
+}
+
+/* ── Selected states ──────────────────────────────────────── */
+
+.pc-sel {
+  outline: 2px solid #f97316 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(249, 115, 22, 0.12) !important;
+  position: relative !important;
+}
+
+.pc-sel::after {
+  content: "✓" !important;
+  position: absolute !important;
+  top: 2px !important;
+  right: 4px !important;
+  background: #f97316 !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  font-family: system-ui, sans-serif !important;
+  border-radius: 3px !important;
+  padding: 1px 4px !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  line-height: 1.4 !important;
+}
+
+/* Blue = shift-clicked, link will be included */
+.pc-sel--link {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(59, 130, 246, 0.12) !important;
+  position: relative !important;
+}
+
+.pc-sel--link::after {
+  content: "✓ 🔗" !important;
+  position: absolute !important;
+  top: 2px !important;
+  right: 4px !important;
+  background: #3b82f6 !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  font-family: system-ui, sans-serif !important;
+  border-radius: 3px !important;
+  padding: 1px 4px !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  line-height: 1.4 !important;
+}
+
+/* ── Banner ───────────────────────────────────────────────── */
+
+.pc-banner {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 2147483646 !important;
+  background: #1c1917 !important;
+  color: #fafaf9 !important;
+  border-bottom: 2px solid #f97316 !important;
+  font-family: system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  padding: 7px 16px !important;
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+
+.pc-toast {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  background: #1c1917 !important;
+  color: #fafaf9 !important;
+  font-family: system-ui, sans-serif !important;
+  font-size: 13px !important;
+  padding: 9px 14px !important;
+  border-radius: 7px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35) !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  animation: pc-fadein 0.18s ease !important;
+  border-left: 3px solid #f97316 !important;
+}
+
+.pc-toast--success {
+  border-left-color: #22c55e !important;
+}
+
+@keyframes pc-fadein {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
