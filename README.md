@@ -11,11 +11,11 @@ Built for repeated workflows on internal tools like Confluence, Jira, and Salesf
 - Toolbar icon opens the popup — click to enter selection mode on any page
 - Hover highlights elements — orange for plain text, blue if a link is detected inside
 - Click to select an element; Shift+Click captures its inner link
+- And keep clicking to add more chunks to your clipboard, saving endless back-and-forth
 - Selected elements show a badge: ✓ for plain, ✓ 🔗 for link-aware
 - Press `C` to copy, `Esc` to cancel selection mode
-- Output is clean plain text joined by a configurable delimiter
-- Link-aware elements paste as live hyperlinks in Google Docs and Outlook
-- Delimiter options: none, `/`, `,`, `·`, or custom — saved per domain
+- Output is clean plain text joined by your configurable delimiter
+- Link-aware elements paste as live hyperlinks in Google Docs, Slack, and Outlook
 - `Ctrl+Shift+G` toggles selection mode from the page without opening the popup
 
 ---
@@ -55,6 +55,7 @@ Shift+Click any element that shows a blue hover outline. It selects with a blue 
 ## Options
 
 Click **Options →** at the bottom of the popup to view and manage your saved delimiter preferences per domain.
+- Delimiter options: none, `/`, `,`, `·`, or custom — saved per domain
 
 ---
 
